@@ -1,7 +1,7 @@
-%Plot Pair Correlation function
-%Might not be a normalised probability density...
+%Modified Pair Correlation Function - probability that a particle lies at
+%radius r from any particle.
 
-XIJ = RotSym(11);
+XIJ = RandSym(76);
 N = length(XIJ);
 dist = squareform(pdist(XIJ));
 rmax = 20;
@@ -18,9 +18,13 @@ for j = 1:length(rlist) - 1
         d = dist(i,:);
         c = c + length(d(d >= rlist(j) & d <= rlist(j+1)));
     end
-    rho = N / (0.5 * 10*cos(pi/10)*2 * 10*sin(pi/10)*10);
+    rho = (0.5 * 10*cos(pi/10)*2 * 10*sin(pi/10)*10)/N;
     c = ((c / N) / (2*pi*rlist(j)*dr)) / rho;
     corr = [corr c];
 end
-plot(rlist(1:end-1), corr)
+corr = corr / trapz(rlist(2:end-1), corr(2:end))
+plot(rlist(2:end-1), corr(2:end))
+ylabel("Probability density")
+xlabel("r")
+title("Random lattice")
 
